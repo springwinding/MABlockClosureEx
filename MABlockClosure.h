@@ -29,7 +29,7 @@
 - (id)initWithBlock: (id)block;
 - (id)initWithSignature: (NSString *)signature;
 - (void *)fptr;
-
+- (void)returnValue:(void *)returnValue callWithArguments:(NSArray *)arguments funtion:(void *)afunction;
 @end
 
 #ifdef __cplusplus
@@ -45,6 +45,8 @@ void *BlockFptr(id block);
 // copies/autoreleases the block, then returns
 // function pointer associated to it
 void *BlockFptrAuto(id block);
+    
+    
 
 #ifdef __cplusplus
 }

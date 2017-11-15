@@ -417,10 +417,29 @@ return *argumentPtr; \
     _signature = signature;
     _closure = AllocateClosure(&_closureFptr);
     [self _prepClosureCIF];
+    [self _prepInnerCIF];
     [self _prepClosure];
     return self;
 }
 
+- (void)returnValue:(void *)returnValue callWithArguments:(NSArray *)arguments funtion:(void *)afunction{
+    int count = self->_closureArgCount;
+    void **innerArgs = malloc((count + 1) * sizeof(*innerArgs));
+    id target = arguments[0];
+    innerArgs[0] = &target;
+    SEL selecotr = NSSelectorFromString(arguments[1]);
+    innerArgs[1] = &selecotr;
+    
+    int value = [arguments[2] integerValue];
+    innerArgs[2] = &value;
+    
+    int value1 = [arguments[3] integerValue];
+    innerArgs[3] = &value1;
+    innerArgs[4] = 0;
+    //这里写self->_innerCIF 或者 self->_closureCIF  都可以，因为二者并没区别，从代码上看
+    ffi_call(&self->_innerCIF, afunction, returnValue, innerArgs);
+    free(innerArgs);
+}
 - (void)dealloc
 {
     if(_closure)
